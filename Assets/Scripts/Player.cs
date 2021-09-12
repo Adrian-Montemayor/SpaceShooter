@@ -25,12 +25,18 @@ public class Player : MonoBehaviour
     private bool _isShieldsActive = false;
     [SerializeField]
     private GameObject _shieldVisualizer;
+    [SerializeField]
+    private GameObject _rightEngine;
+    [SerializeField]
+    private GameObject _leftEngine;
 
     [SerializeField]
     private int _score;
 
     private UIManager _uiManager;
-
+    [SerializeField]
+    private AudioClip _laserSoundClip;
+    private AudioSource _audioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +44,7 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        _audioSource = GetComponent<AudioSource>();
         if (_spawnManager == null)
         {
             Debug.LogError("The Spawn Manager is NULL.");
@@ -45,6 +52,14 @@ public class Player : MonoBehaviour
         if(_uiManager == null)
         {
             Debug.LogError("The UIManager is NULL");
+        }
+        if(_audioSource == null)
+        {
+            Debug.LogError("The AudioSource on the player is NULL");
+        }
+        else
+        {
+            _audioSource.clip = _laserSoundClip;
         }
     }
 
@@ -75,6 +90,7 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(11.3f, transform.position.y, 0);
         }
+        
     }
 
     void FireLaser()
@@ -89,7 +105,7 @@ public class Player : MonoBehaviour
         {
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
         }
-
+        _audioSource.Play();
     }
 
     public void Damage()
@@ -103,6 +119,15 @@ public class Player : MonoBehaviour
 
         _lives--;
         _uiManager.UpdateLives(_lives);
+
+        if(_lives == 2)
+        {
+            _leftEngine.SetActive(true);
+        }
+        if(_lives == 1)
+        {
+            _rightEngine.SetActive(true);
+        }
         if (_lives < 1)
         {
             _spawnManager.OnPlayerDeath();

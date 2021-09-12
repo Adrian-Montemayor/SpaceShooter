@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - Laser
   - Canvas
+  - Astroid
   layers:
   - Default
   - TransparentFX
@@ -14,7 +15,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Post Processing
   - 
   - 
   - 
